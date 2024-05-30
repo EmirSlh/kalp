@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Kalp Hastalığı Tahmin Sistemi</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: antiquewhite;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px; 
+            overflow: hidden;
+        }
+        .giris {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInUp 1s ease; /* Giriş animasyonu */
+        }
+        #dogruluk{
+            font-weight: 600;
+        }
+        .tahmin {
+            position: relative; /* Kalpler formun arkasında kalacak */
+            z-index: 1;
+            margin-bottom: 30px;
+        }
+        .tahmin h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #db3442;
+        }
+        h2.baslik { /* Grafikler başlığı için yeni stil */
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #db3442;
+            text-align: center;
+        }
+        .card {
+            position: relative; /* Kalpler formun arkasında kalacak */
+            z-index: 1;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+            background-color:beige;
+        }
+        .card-body {
+            padding: 30px;
+        }
+        .card-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #db3442;
+            margin-bottom: 15px;
+        }
+        .resimler {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .resim {
+            width: 48%; /* İki sütunlu düzen */
+            margin-bottom: 20px;
+        }
+        .resim img {
+            max-width: 100%; 
+            height: auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 20%;
+            position: relative; /* Kalpler formun arkasında kalacak */
+            z-index: 1;
+        }
+        .heart {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(to bottom, #ff6b81, #ff4757);
+            transform: rotate(45deg);
+            animation: floatHeart 5s linear infinite;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(to bottom, #ff6b81, #ff4757);
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            left: -5px;
+            top: 0;
+        }
+
+        .heart::after {
+            top: -5px;
+            left: 0;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(0) rotate(45deg);
+            }
+            50% {
+                transform: translateY(-10px) rotate(45deg);
+            }
+            100% {
+                transform: translateY(0) rotate(45deg);
+            }
+        }
+
+        /* Responsive Design */
+       
+
+        /* Animasyon */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="giris">
+            <h1>Kalp Hastalığı Tahmin Sonuçları</h1>
+            <p>Uyarı... Girilen bilgiler 3 farklı model ile mevcut verilerin işlenmesi ile oluşturulmuş makine öğrenimi ile tahminlendirilmektedir. Kesinlikle gösterilen tahminin gerçekliği yoktur.</p>
+            <div class="row tahmin"> 
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-user-md"></i> Tahmin 1</h5>
+                            <p class="card-text">{{ prediction_text }}</p>
+                            <p id="dogruluk">(Doğruluk oranı : %87)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-heartbeat"></i> Tahmin 2</h5>
+                            <p class="card-text">{{ prediction_text2 }}</p>
+                            <p id="dogruluk">(Doğruluk oranı : %81)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-stethoscope"></i> Tahmin 3</h5>
+                            <p class="card-text">{{ prediction_text3 }}</p>
+                            <p id="dogruluk">(Doğruluk oranı : %80)</p>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="baslik">Grafikler</h2>
+        <div class="resimler">
+            <div class="resim">
+                <img src="https://pbs.twimg.com/media/GM4-hE1WEAAoalO?format=png&name=900x900" alt="Yaş Dağılımı">
+            </div>
+            <div class="resim">
+                <img src="https://pbs.twimg.com/media/GM4-hE2WsAADTNC?format=png&name=900x900" alt="Kan Basıncı Dağılımı">
+            </div>
+            <div class="resim">
+                <img src="https://pbs.twimg.com/media/GM4-hE1XkAAbupQ?format=png&name=900x900" alt="Kolestrol Dağılımı">
+            </div>
+            <div class="resim">
+                <img src="https://pbs.twimg.com/media/GM4-hEuXMAAzLl-?format=png&name=900x900" alt="Thalach Dağılımı">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * document.body.clientHeight; // Bu satırı değiştirdik
+            const size = Math.random() * 15 + 5;
+            const delay = Math.random() * -10;
+            heart.style.left = x + 'px';
+            heart.style.top = y + 'px';
+            heart.style.width = size + 'px';
+            heart.style.height = size + 'px';
+            heart.style.animationDelay = delay + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => {
+                heart.remove();
+            }, 10000); 
+        }
+
+        setInterval(createHeart, 300); 
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalp Hastalığı Tahmin Sistemi</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color:antiquewhite;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden; /* Sadece container içinde taşmayı engeller */
+        }
+
+        .form-box {
+            background: #bfff5fc8;
+            padding: 40px 50px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            position: relative; /* Kalpler formun arkasında kalacak */
+            z-index: 1; /* Formu kalplerin önüne taşır */
+        }
+
+        h1 {
+            color: #db3442;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+        }
+
+        button[type="submit"] {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 5px;
+            background-color: #db3442;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #27ae60;
+        }
+
+        .prediction {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        /* Kalp Şekilli Parçacıklar */
+        .heart {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(to bottom, #ff6b81, #ff4757);
+            transform: rotate(45deg);
+            animation: floatHeart 5s linear infinite;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(to bottom, #ff6b81, #ff4757);
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            left: -5px;
+            top: 0;
+        }
+
+        .heart::after {
+            top: -5px;
+            left: 0;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(0) rotate(45deg);
+            }
+            50% {
+                transform: translateY(-10px) rotate(45deg);
+            }
+            100% {
+                transform: translateY(0) rotate(45deg);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 500px) {
+            .form-box {
+                padding: 30px 30px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-box">
+            <h1>Kalp Hastalığı Tahmin Sistemi</h1>
+            <h2>Hoşgeldiniz!</h2>
+            <p>Kalp sağlığınız hakkında daha fazla bilgi edinmek ister misiniz? Hemen aşağıdaki testi tamamlayarak kalp hastalığı riskinizi öğrenin.</p>
+
+            <form action="/tahmin" method="POST">
+                <label for="yas">Yaşınızı giriniz:</label>
+                <input type="number" name="yas" id="yas" placeholder="Yaşınız" min="1" max="122" required>
+
+                <label for="cinsiyet">Cinsiyetinizi giriniz (1 = erkek; 0 = kadın):</label>
+                <input type="number" name="cinsiyet" id="cinsiyet" placeholder="Cinsiyetiniz" min="0" max="1" required>
+
+                <label for="agriTipi">Göğüs ağrı tipinizi giriniz (0-1-2-3):</label>
+                <input type="number" name="agriTipi" id="agriTipi" placeholder="Ağrı Tipiniz" min="0" max="3" required>
+
+                <label for="kanBasinci">Kan basıncınızı giriniz:</label>
+                <input type="number" name="kanBasinci" id="kanBasinci" placeholder="Kan Basıncınız" min="0" max="500" required>
+
+                <label for="kolestrol">Kolestrol değerinizi giriniz:</label>
+                <input type="number" name="kolestrol" id="kolestrol" placeholder="Kolestrol Değeriniz" min="0" max="500" required>
+
+                <label for="kanSekeri">Kan şekerinizi giriniz (120'den büyükse 1, küçükse 0):</label>
+                <input type="number" name="kanSekeri" id="kanSekeri" placeholder="Kan Şekeriniz" min="0" max="1" required>
+
+                <label for="ekg">Dinlenme durumundaki ekg sonuçlarınızı giriniz (0-1-2):</label>
+                <input type="number" name="ekg" id="ekg" placeholder="Ekg Değeriniz" min="0" max="2" required>
+
+                <label for="thalach">Thalach değerinizi giriniz (Kişinin ulaştığı maksimum kalp atış hızı.):</label>
+                <input type="number" name="thalach" id="thalach" placeholder="Thalach" min="0" max="500" required>
+
+                <label for="angina">Egzersize bağlı angina varlığı (0:Hayır,1:Evet):</label>
+                <input type="number" name="angina" id="angina" placeholder="Agina Değeriniz" min="0" max="1" required>
+
+                <label for="eskiSt">Dinlenmeyle egzersiz ilişkili ST depresyonu değerinizi giriniz:</label>
+                <input type="text" name="eskiSt" id="eskiSt" placeholder="Eski St Değeriniz" min="0" max="10" required>
+
+                <label for="yeniSt">Maksimum egzersiz durumunda ST segmentinin eğimini giriniz (0-1-2):</label>
+                <input type="number" name="yeniSt" id="yeniSt" placeholder="Yeni St Değeriniz" min="0" max="10" required>
+
+                <label for="floroskopi">Floroskopi ile renklendirilmiş ana damar sayınızı giriniz:</label>
+                <input type="number" name="floroskopi" id="floroskopi" placeholder="Floroskopi" min="0" max="10" required>
+
+                <label for="thal">Talasemi değerinizi giriniz (0-1-2-3):</label>
+                <input type="number" name="thal" id="thal" placeholder="Thal"  min="0" max="3" required>
+
+                <div class="kvkk-onay"> <input type="checkbox" id="kvkkOnay" name="kvkkOnay" required>
+                    <label for="kvkkOnay"> Yapılan tahminin gerçek sonuç vermediğini onaylıyorum.</label>
+                  </div>
+
+                <button type="submit">Tahmin</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * document.body.clientHeight; // Bu satırı değiştirdik
+            const size = Math.random() * 15 + 5;
+            const delay = Math.random() * -10;
+            heart.style.left = x + 'px';
+            heart.style.top = y + 'px';
+            heart.style.width = size + 'px';
+            heart.style.height = size + 'px';
+            heart.style.animationDelay = delay + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => {
+                heart.remove();
+            }, 10000); 
+        }
+
+        setInterval(createHeart, 300); 
+    </script>
+
+<script>
+    const kvkkOnay = document.getElementById('kvkkOnay');
+    const tahminButonu = document.getElementById('tahminButonu');
+
+    kvkkOnay.addEventListener('change', function() {
+        if (this.checked) {
+            tahminButonu.disabled = false;
+        } else {
+            tahminButonu.disabled = true;
+        }
+    });
+
+
+    
+</script>
+
+
+</body>
+</html>
